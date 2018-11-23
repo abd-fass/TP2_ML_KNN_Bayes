@@ -3,6 +3,7 @@ clear all; close all; clc;
 %% Pour pouvoir visualiser les résultats sur les figures, 
 % il faudrait appuyer sur une touche de clavier qui va permettre de 
 % faire défiler les figures une pas une
+% ceci est un commentaire
 
 %%
 data1 = 'td3_d1.mat';
