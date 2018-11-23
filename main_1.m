@@ -129,15 +129,37 @@ moy = zeros(2,nbr_clas);
 sigma = zeros(2,2,nbr_clas);
 P = zeros(1,nbr_clas);
 
+% sachant que pour ce cas, la disposition des échantillions par rapport à
+% leurs classes n'est pas le même que pour l'exemple précedent (50 1er
+%échantillions classe 1, 50 2eme échantillions clase 2,...). De ce fait ne
+% devons calculer la moyenne et sigma en fonction des étiquettes de ces
+% échnatillions.
+
+% Pour simplifier notre calcul, nous allons réorganiser notre tableau
+% d'échnatillions dans un nouveu tableau test_org
+
+test_org = zeros(size(test));
+
 % moyenne
-moy(:,1) = mean(test(:,1:50)');
-moy(:,2) = mean(test(:,51:100)');
-moy(:,3) = mean(test(:,101:150)');
+a = 1;
+for i=1:nbr_clas
+    for j=1:length(test)
+        if orig(j) == i
+            test_org(:,a) = test(:,j);
+            a = a + 1;
+        end
+    end
+end
+        
+moy(:,1) = mean(test_org(:,1:50)');
+moy(:,2) = mean(test_org(:,51:100)');
+moy(:,3) = mean(test_org(:,101:150)');
 
 % sigma
-sigma(:,:,1) = cov(test(:,1:50)');
-sigma(:,:,2) = cov(test(:,51:100)');
-sigma(:,:,3) = cov(test(:,101:150)');
+
+sigma(:,:,1) = cov(test_org(:,1:50)');
+sigma(:,:,2) = cov(test_org(:,51:100)');
+sigma(:,:,3) = cov(test_org(:,101:150)');
 
 % P 
 P(1) = 50/150;
