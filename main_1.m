@@ -3,7 +3,6 @@ clear all; close all; clc;
 %% Pour pouvoir visualiser les résultats sur les figures, 
 % il faudrait appuyer sur une touche de clavier qui va permettre de 
 % faire défiler les figures une pas une
-% ceci est un commentaire
 
 %%
 data1 = 'td3_d1.mat';
@@ -53,7 +52,9 @@ for k=1:2:K
 end
 
 figure();
-plot(er_cl_KNN_d1);
+plot([1,3,5,7,9,11,13,15,17], er_cl_KNN_d1);
+xlabel('K');
+ylabel('erreur class (%)');
 str = sprintf('Courbe d erreur clas pour les différentes valeur de k (%s)', data1_aff);
 title(str);
 w = waitforbuttonpress;
@@ -119,6 +120,7 @@ str = sprintf('Visualisation de la classification de test avec orig (%s)', data2
 title(str);
 w = waitforbuttonpress;
 
+
 %% Bayes
 
 % calcul moyenne, sigma et P
@@ -170,7 +172,9 @@ for k=1:2:K
 end
 
 figure();
-plot(er_cl_KNN_d2);
+plot([1,3,5,7,9,11,13,15,17], er_cl_KNN_d2);
+xlabel('K');
+ylabel('erreur class (%)');
 str = sprintf('Courbe d erreur clas pour les différentes valeur de k (%s)', data2_aff);
 title(str);
 w = waitforbuttonpress;
