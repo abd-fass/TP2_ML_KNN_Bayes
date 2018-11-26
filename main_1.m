@@ -16,7 +16,7 @@ oracle_test(51:100) = 2;
 oracle_test(101:150) = 3;
 
 figure();
-plot(test(1,:),test(2,:), 'r*');
+plot(test(1,:),test(2,:), 'b*');
 str = sprintf('affichage du jeu de données test (%s)', data1_aff);
 title(str);
 w = waitforbuttonpress;
@@ -28,7 +28,7 @@ title(str);
 w = waitforbuttonpress;
 
 figure();
-plot(x(1,:),x(2,:), 'b*');
+plot(x(1,:),x(2,:), 'r*');
 str = sprintf('affichage du jeu de données x (%s)', data1_aff);
 title(str);
 w = waitforbuttonpress;
@@ -204,6 +204,204 @@ plot([1,3,5,7,9,11,13,15,17], er_cl_KNN_d2);
 xlabel('K');
 ylabel('erreur class (%)');
 str = sprintf('Courbe d erreur clas pour les différentes valeur de k (%s)', data2_aff);
+title(str);
+w = waitforbuttonpress;
+
+% Close all figures
+
+W = waitforbuttonpress;
+
+if W == 1
+    close all;
+end
+
+%% The influence of the size of the training database
+
+%% small DB
+
+clear all; close all; clc;
+
+data3a = 'td3_d3a.mat';
+data3a_aff = 'td3 d3a';
+load(data3a);
+
+figure();
+plot(test(1,:),test(2,:), 'b*');
+str = sprintf('affichage du jeu de données test (%s)', data3a_aff);
+title(str);
+w = waitforbuttonpress;
+
+oracle_test = zeros(1,60);
+
+oracle_test(1,1:20) = 1;
+oracle_test(1,21:40) = 2;
+oracle_test(1,41:60) = 3;
+
+figure();
+affiche_classe(test,oracle_test);
+str = sprintf('Visualisation de la classification de test avec testOracle (%s)', data3a_aff);
+title(str);
+w = waitforbuttonpress;
+
+figure();
+plot(x(1,:),x(2,:), 'r*');
+str = sprintf('affichage du jeu de données x (%s)', data3a_aff);
+title(str);
+w = waitforbuttonpress;
+
+% Bayes
+
+% calcul moyenne, sigma et P
+nbr_clas = 3;
+moy = zeros(2,nbr_clas);
+sigma = zeros(2,2,nbr_clas);
+P = zeros(1,nbr_clas);
+
+moy(:,1) = mean(test(:,1:20)');
+moy(:,2) = mean(test(:,21:40)');
+moy(:,3) = mean(test(:,41:60)');
+
+% sigma
+
+sigma(:,:,1) = cov(test(:,1:20)');
+sigma(:,:,2) = cov(test(:,21:40)');
+sigma(:,:,3) = cov(test(:,41:60)');
+
+% P 
+P(1) = 20/60;
+P(2) = 20/60;
+P(3) = 20/60;
+
+clas_x_Bayes = decision_bayes(moy, sigma, P, x);
+
+er_cl_Bayes_3a = (erreur_classif(clasapp,clas_x_Bayes)/length(clasapp))*100;
+
+figure();
+affiche_classe(x, clas_x_Bayes);
+str = sprintf('Visualisation de la classification de x avec Bayes (%s) \n erreur clas = %f%%', data3a_aff, er_cl_Bayes_3a);
+title(str);
+w = waitforbuttonpress;
+
+% KNN
+K = 17;
+a = 0;
+er_cl_KNN_d3a = zeros(1,8);
+for k=1:2:K
+    clas_x_Knn = decision_knn(test, oracle_test, k, x);
+    
+    a = a + 1;
+    er_cl_KNN_d3a(1,a) = (erreur_classif(clasapp,clas_x_Knn)/length(clasapp))*100;
+    
+    figure();
+    affiche_classe(x, clas_x_Knn);
+    str = sprintf('Visualisation de la classification de x avec Knn pour k=%d (%s) \n erreur clas = %f%%', k, data3a_aff, er_cl_KNN_d3a(1,a));
+    title(str);
+    w = waitforbuttonpress;
+end
+
+figure();
+plot([1,3,5,7,9,11,13,15,17], er_cl_KNN_d3a);
+xlabel('K');
+ylabel('erreur class (%)');
+str = sprintf('Courbe d erreur clas pour les différentes valeur de k (%s)', data3a_aff);
+title(str);
+w = waitforbuttonpress;
+
+% Close all figures
+
+W = waitforbuttonpress;
+
+if W == 1
+    close all;
+end
+
+%% Large base
+
+clear all; close all; clc;
+
+data3b = 'td3_d3b.mat';
+data3b_aff = 'td3 d3b';
+load(data3b);
+
+figure();
+plot(test(1,:),test(2,:), 'b*');
+str = sprintf('affichage du jeu de données test (%s)', data3b_aff);
+title(str);
+w = waitforbuttonpress;
+
+oracle_test = zeros(1,450);
+
+oracle_test(1,1:150) = 1;
+oracle_test(1,151:300) = 2;
+oracle_test(1,301:450) = 3;
+
+figure();
+affiche_classe(test,oracle_test);
+str = sprintf('Visualisation de la classification de test avec testOracle (%s)', data3b_aff);
+title(str);
+w = waitforbuttonpress;
+
+figure();
+plot(x(1,:),x(2,:), 'r*');
+str = sprintf('affichage du jeu de données x (%s)', data3b_aff);
+title(str);
+w = waitforbuttonpress;
+
+% Bayes
+
+% calcul moyenne, sigma et P
+nbr_clas = 3;
+moy = zeros(2,nbr_clas);
+sigma = zeros(2,2,nbr_clas);
+P = zeros(1,nbr_clas);
+
+moy(:,1) = mean(test(:,1:150)');
+moy(:,2) = mean(test(:,151:300)');
+moy(:,3) = mean(test(:,301:450)');
+
+% sigma
+
+sigma(:,:,1) = cov(test(:,1:150)');
+sigma(:,:,2) = cov(test(:,151:300)');
+sigma(:,:,3) = cov(test(:,301:450)');
+
+% P 
+P(1) = 150/450;
+P(2) = 150/450;
+P(3) = 150/450;
+
+clas_x_Bayes = decision_bayes(moy, sigma, P, x);
+
+er_cl_Bayes_3b = (erreur_classif(clasapp,clas_x_Bayes)/length(clasapp))*100;
+
+figure();
+affiche_classe(x, clas_x_Bayes);
+str = sprintf('Visualisation de la classification de x avec Bayes (%s) \n erreur clas = %f%%', data3b_aff, er_cl_Bayes_3b);
+title(str);
+w = waitforbuttonpress;
+
+% KNN
+K = 17;
+a = 0;
+er_cl_KNN_d3a = zeros(1,8);
+for k=1:2:K
+    clas_x_Knn = decision_knn(test, oracle_test, k, x);
+    
+    a = a + 1;
+    er_cl_KNN_d3b(1,a) = (erreur_classif(clasapp,clas_x_Knn)/length(clasapp))*100;
+    
+    figure();
+    affiche_classe(x, clas_x_Knn);
+    str = sprintf('Visualisation de la classification de x avec Knn pour k=%d (%s) \n erreur clas = %f%%', k, data3b_aff, er_cl_KNN_d3b(1,a));
+    title(str);
+    w = waitforbuttonpress;
+end
+
+figure();
+plot([1,3,5,7,9,11,13,15,17], er_cl_KNN_d3b);
+xlabel('K');
+ylabel('erreur class (%)');
+str = sprintf('Courbe d erreur clas pour les différentes valeur de k (%s)', data3b_aff);
 title(str);
 w = waitforbuttonpress;
 
